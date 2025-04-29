@@ -5,6 +5,7 @@
 ### 🛠️ Paso a paso
 
 1. Clona el repositorio usando el siguiente enlace:
+**Nota**: Si usted es el profesor no vuelva a clonar el repositorio porque todos los archivo del repositorio estan en el .zip enviado. 🫡 
 
    ```
    https://github.com/C4P-N3M0164/Proyecto_DB.git
