@@ -1,0 +1,16 @@
+services:
+  mysql:
+    build: .
+    container_name: mysql-energia
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: energia
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
