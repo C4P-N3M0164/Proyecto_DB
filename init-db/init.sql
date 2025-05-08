@@ -105,3 +105,38 @@ INSERT INTO Transaccion_Energetica (id_agente, fecha, hora, volumen_kwh) VALUES
 (2, '2025-04-28', 10, 1500.25),
 (2, '2025-04-28', 11, 1450.00);
 
+
+-- Para cargar los agentes
+LOAD DATA INFILE 'agentes.csv' 
+INTO TABLE Agente_Mercado 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES 
+(nombre_agente, tipo_agente);
+
+-- Para cargar la demanda
+LOAD DATA INFILE 'demanda.csv' 
+INTO TABLE Demanda_Energetica 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES 
+(nombre_agente, fecha, hora, valor_kwh);
+
+-- Para cargar los precios
+LOAD DATA INFILE 'precios.csv' 
+INTO TABLE Precio_Energia 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES 
+(nombre_sistema, fecha, valor_cop_kwh);
+
+LOAD DATA INFILE 'transacciones.csv' 
+INTO TABLE Transaccion_Energetica 
+FIELDS TERMINATED BY ',' 
+ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 LINES 
+(nombre_agente, fecha, hora, volumen_kwh);

@@ -1,0 +1,14 @@
+# my-slave.cnf
+[mysqld]
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+
+# Replication settings for slave
+server-id=2
+relay-log=mysql-relay-bin
+read_only=1
+log_slave_updates=1
+
+# Performance settings
+innodb_flush_log_at_trx_commit=1
+innodb_buffer_pool_size=256M
+max_allowed_packet=64M 

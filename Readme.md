@@ -4,49 +4,76 @@
 
 ### 🛠️ Paso a paso
 
-1. Clona el repositorio usando el siguiente enlace:
-**Nota**: Si usted es el profesor no vuelva a clonar el repositorio porque todos los archivo del repositorio estan en el .zip enviado. 🫡 
+Clona el repositorio usando el siguiente enlace:
+**Nota**: Si usted es el profesor no vuelva a clonar el repositorio porque todos los archivo del repositorio estan en el .zip enviado.
 
    ```
    https://github.com/C4P-N3M0164/Proyecto_DB.git
    ```
 
-2. Abre Docker Desktop si aún no lo tienes abierto.
-3. Abre una terminal con la ruta base del proyecto.
-4. Crea la imagen en base a los archivos descargados con el siguiente comando:
+---
 
+## 🔄 Replicación de Bases de Datos
+
+### Requisitos Previos
+- Python 3.x instalado
+- Docker y Docker Compose instalados
+- Acceso a los archivos de configuración de MySQL
+
+### Pasos para la Replicación
+
+1. **Extracción de Datos**
+   ```bash
+   # Ejecutar el script de Python para extraer los datos
+   python extract_data.py
    ```
+
+2. **Iniciar Contenedores con Replicación**
+   ```bash
+   # Construir e iniciar los contenedores
    docker-compose up --build
    ```
 
-5. Espera a que la imagen termine de construirse.
-6. Ejecuta el siguiente comando para acceder a la base de datos:
-
-   ```
+3. **Verificar Estado de Replicación**
+   ```bash
+   # Conectarse al contenedor principal
    docker exec -it mysql-energia mysql -u root -p
+   
+   # Verificar el estado de replicación
+   SHOW MASTER STATUS;
+   SHOW SLAVE STATUS\G
    ```
 
-7. Ejecuta el siguiente comando para listar las bases de datos disponibles:
+4. **Monitoreo de Replicación**
+   - Revisar los logs de los contenedores para asegurar que la replicación esté funcionando correctamente
+   ```bash
+   docker logs mysql-energia
+   ```
+
+5. Ejecuta el siguiente comando para listar las bases de datos disponibles:
 
    ```sql
    show databases;
    ```
 
-8. Para usar una base de datos específica, usa el siguiente comando:
+6. Para usar una base de datos específica, usa el siguiente comando:
 
    ```sql
    use energia;
    ```
 
-9. Si deseas listar las tablas dentro de la base de datos, usa:
+7. Si deseas listar las tablas dentro de la base de datos, usa:
 
    ```sql
    show tables;
    ```
 
-10. Realiza las consultas que requieras.
+8. Realiza las consultas que requieras.
 
----
+### Notas Importantes
+- Asegúrate de que los puertos necesarios estén disponibles
+- Los datos se replicarán automáticamente una vez que los contenedores estén en funcionamiento
+- Mantén una copia de seguridad de los datos antes de iniciar la replicación
 
 ## Justificación del Modelo
 

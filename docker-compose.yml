@@ -1,16 +1,42 @@
+version: '3.8'
+
 services:
-  mysql:
+  mysql-master:
     build: .
-    container_name: mysql-energia
+    container_name: mysql-master
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: energia
+      MYSQL_SERVER_ID: 1
+    volumes:
+      - mysql-master-data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - "3306:3306"
+    networks:
+      - mysql-network
+
+  mysql-slave:
+    build: .
+    container_name: mysql-slave
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: energia
+      MYSQL_SERVER_ID: 2
     volumes:
-      - ./init-db:/docker-entrypoint-initdb.d
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
+      - mysql-slave-data:/var/lib/mysql
+      - ./my-slave.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3307:3306"
+    depends_on:
+      - mysql-master
+    networks:
+      - mysql-network
 
 volumes:
-  mysql_data:
+  mysql-master-data:
+  mysql-slave-data:
+
+networks:
+  mysql-network:
+    driver: bridge
