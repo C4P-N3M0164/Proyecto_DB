@@ -121,50 +121,6 @@ def consultar_cere(fecha_inicio, fecha_fin):
             print(f"Error consultando CERE de {inicio} a {fin}")
     return datos
 
-# Consultar transacciones
-def consultar_transacciones(agentes, fecha_inicio, fecha_fin):
-    """Consulta transacciones y genera datos para Transaccion_Energetica"""
-    datos = []
-    rangos = rangos_mensuales(fecha_inicio, fecha_fin)
-    
-    for agente in agentes:
-        if 'ListEntities' in agente:
-            print(agente)
-            for entity in agente['ListEntities']:
-                if 'Values' in entity:
-                    values = entity['Values']
-                    codigo = values.get('Code')
-                    nombre_agente = values.get('Name')
-                    
-                    if codigo and nombre_agente:
-                        print(f"Consultando transacciones para agente: {codigo}")
-                        for inicio, fin in rangos:
-                            payload = {
-                                "MetricId": "Transacciones",
-                                "StartDate": str(inicio),
-                                "EndDate": str(fin),
-                                "Entity": "Agente",
-                                "Filter": [codigo]
-                            }
-                            r = requests.post(URL_HOURLY, json=payload)
-                            if r.status_code == 200:
-                                res = r.json()
-                                for item in res.get('Items', []):
-                                    fecha = item.get('Date')
-                                    for ent in item.get('HourlyEntities', []):
-                                        valores = ent.get('Values', {})
-                                        for hora, valor in valores.items():
-                                            if hora.isdigit() and 0 <= int(hora) <= 23:
-                                                row = {
-                                                    'nombre_agente': nombre_agente,
-                                                    'fecha': fecha,
-                                                    'hora': int(hora),
-                                                    'volumen_kwh': float(valor) if valor else 0.0
-                                                }
-                                                datos.append(row)
-                            
-    return datos
-
 # Guardar en CSV
 def guardar_csv(datos, nombre):
     df = pd.DataFrame(datos)
@@ -175,24 +131,19 @@ if __name__ == "__main__":
     agentes = obtener_agentes()
     print(f"Total agentes: {len(agentes)}")
 
-    #print("Consultando DemaCome...")
-    #datos_demacome = consultar_demacome(FECHA_INICIO, FECHA_FIN)
-    #guardar_csv(datos_demacome, "demacome.csv")
-    #print("DemaCome guardado en demacome.csv")
+    print("Consultando DemaCome...")
+    datos_demacome = consultar_demacome(FECHA_INICIO, FECHA_FIN)
+    guardar_csv(datos_demacome, "demacome.csv")
+    print("DemaCome guardado en demacome.csv")
 
-    #print("Consultando DemaReal...")
-    #datos_demareal = consultar_demareal(agentes, FECHA_INICIO, FECHA_FIN)
-    #guardar_csv(datos_demareal, "demareal.csv")
-    #print("DemaReal guardado en demareal.csv")
+    print("Consultando DemaReal...")
+    datos_demareal = consultar_demareal(agentes, FECHA_INICIO, FECHA_FIN)
+    guardar_csv(datos_demareal, "demareal.csv")
+    print("DemaReal guardado en demareal.csv")
 
-    #print("Consultando CERE...")
-    #datos_cere = consultar_cere(FECHA_INICIO, FECHA_FIN)
-    #guardar_csv(datos_cere, "cere.csv")
-    #print("CERE guardado en cere.csv")
-
-    print("Consultando transacciones...")
-    datos_transacciones = consultar_transacciones(agentes, FECHA_INICIO, FECHA_FIN)
-    guardar_csv(datos_transacciones, "transacciones.csv")
-    print("Transacciones guardadas en transacciones.csv")
+    print("Consultando CERE...")
+    datos_cere = consultar_cere(FECHA_INICIO, FECHA_FIN)
+    guardar_csv(datos_cere, "cere.csv")
+    print("CERE guardado en cere.csv")
 
     print("Extracción finalizada. Los archivos CSV están listos para cargar en la base de datos.") 
