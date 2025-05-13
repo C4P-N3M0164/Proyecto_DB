@@ -22,53 +22,72 @@ Clona el repositorio usando el siguiente enlace:
 
 ### Pasos para la Replicación
 
-1. **Extracción de Datos**
+1. **Abra una terminar teniendo como path la carpeta que contiene los archivos del proyecto**
+
+2. **Ingrese a la carpeta Datos**
+   ```bash
+   # Navegar a la carpeta datos
+   cd datos
+   ```
+
+3. **Extracción de Datos**
    ```bash
    # Ejecutar el script de Python para extraer los datos
    python extract_data.py
    ```
 
-2. **Iniciar Contenedores con Replicación**
+4. **Transformación de Datos**
+   ```bash
+   # Ejecutar el script de Python para transformar los datos
+   python transformarDatos.py
+   ```
+5. **Devolvernos a la carpeta del proyecto**
+   ```bash
+   # Navegar a la carpeta raiz del proyecto
+   cd ..
+   ```
+
+3. **Iniciar Contenedores con Replicación**
    ```bash
    # Construir e iniciar los contenedores
    docker-compose up --build
    ```
 
-3. **Verificar Estado de Replicación**
+4. **Verificar Estado de Replicación**
    ```bash
    # Conectarse al contenedor principal
-   docker exec -it mysql-energia mysql -u root -p
+   docker exec -it mysql-master mysql -u root -p
    
    # Verificar el estado de replicación
    SHOW MASTER STATUS;
    SHOW SLAVE STATUS\G
    ```
 
-4. **Monitoreo de Replicación**
+5. **Monitoreo de Replicación**
    - Revisar los logs de los contenedores para asegurar que la replicación esté funcionando correctamente
    ```bash
    docker logs mysql-energia
    ```
 
-5. Ejecuta el siguiente comando para listar las bases de datos disponibles:
+6. Ejecuta el siguiente comando para listar las bases de datos disponibles:
 
    ```sql
    show databases;
    ```
 
-6. Para usar una base de datos específica, usa el siguiente comando:
+7. Para usar una base de datos específica, usa el siguiente comando:
 
    ```sql
    use energia;
    ```
 
-7. Si deseas listar las tablas dentro de la base de datos, usa:
+8. Si deseas listar las tablas dentro de la base de datos, usa:
 
    ```sql
    show tables;
    ```
 
-8. Realiza las consultas que requieras.
+9. Realiza las consultas que requieras.
 
 ### Notas Importantes
 - Asegúrate de que los puertos necesarios estén disponibles
@@ -120,28 +139,25 @@ Esta consulta agrupa la información por fecha y sistema energético para estima
 
 ```sql
 SELECT 
-    pe.fecha,
-    se.nombre_sistema,
-    pe.valor_cop_kwh,
-    
-    SUM(de.valor_kwh) AS demanda_total_kwh,
-    SUM(te.volumen_kwh) AS volumen_transado_kwh,
-    
-    (SUM(te.volumen_kwh) * pe.valor_cop_kwh) AS ingreso_estimado_cop
+    c.Fecha,
+    c.Codigo AS nombre_sistema,
+    c.Valor AS valor_cop_kwh,
 
-FROM precio_energia pe
+    -- Demanda total kWh desde MedicionDemanda
+    SUM(md.Valor) AS demanda_total_kwh,
 
-JOIN sistema_energetico se ON pe.id_sistema = se.id_sistema
-LEFT JOIN agente_mercado am_de ON am_de.id_agente IN (
-    SELECT id_agente FROM demanda_energetica
-)
-LEFT JOIN demanda_energetica de ON de.id_agente = am_de.id_agente AND de.fecha = pe.fecha
+    -- Volumen transado kWh desde DemandaComercial
+    SUM(dc.Valor) AS volumen_transado_kwh,
 
-LEFT JOIN agente_mercado am_te ON am_te.id_agente IN (
-    SELECT id_agente FROM transaccion_energetica
-)
-LEFT JOIN transaccion_energetica te ON te.id_agente = am_te.id_agente AND te.fecha = pe.fecha
+    -- Ingreso estimado
+    (SUM(dc.Valor) * c.Valor) AS ingreso_estimado_cop
 
-GROUP BY pe.fecha, se.nombre_sistema, pe.valor_cop_kwh
-ORDER BY pe.fecha ASC;
+FROM Cere c
+
+LEFT JOIN MedicionDemanda md ON md.Fecha = c.Fecha
+LEFT JOIN DemandaComercial dc ON dc.Fecha = c.Fecha
+
+GROUP BY c.Fecha, c.Codigo, c.Valor
+ORDER BY c.Fecha ASC;
+
 ```

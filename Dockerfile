@@ -16,5 +16,5 @@ ENV MYSQL_DATABASE=energia
 EXPOSE 3306
 
 # Script de inicialización para la replicación
-COPY init-replication.sh /docker-entrypoint-initdb.d/
-RUN chmod +x /docker-entrypoint-initdb.d/init-replication.sh
+# COPY init-replication.sh /docker-entrypoint-initdb.d/
+# RUN chmod +x /docker-entrypoint-initdb.d/init-replication.sh

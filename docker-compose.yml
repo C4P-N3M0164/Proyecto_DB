@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql-master:
     build: .
@@ -9,6 +7,8 @@ services:
       MYSQL_DATABASE: energia
       MYSQL_SERVER_ID: 1
     volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+      - ./datos:/var/lib/mysql-files
       - mysql-master-data:/var/lib/mysql
       - ./my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
@@ -24,6 +24,8 @@ services:
       MYSQL_DATABASE: energia
       MYSQL_SERVER_ID: 2
     volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+      - ./datos:/var/lib/mysql-files
       - mysql-slave-data:/var/lib/mysql
       - ./my-slave.cnf:/etc/mysql/conf.d/my.cnf
     ports:
