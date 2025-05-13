@@ -29,31 +29,37 @@ Clona el repositorio usando el siguiente enlace:
    # Navegar a la carpeta datos
    cd datos
    ```
+3. **Instale las librerias necesarias**
+   ```bash
+   # Ejecute el siguiente comando para instalar las librerias que se requieren.
+   python install -r requirements.txt
+   ```
 
-3. **Extracción de Datos**
+4. **Extracción de Datos**
    ```bash
    # Ejecutar el script de Python para extraer los datos
    python extract_data.py
    ```
 
-4. **Transformación de Datos**
+5. **Transformación de Datos**
    ```bash
    # Ejecutar el script de Python para transformar los datos
    python transformarDatos.py
    ```
-5. **Devolvernos a la carpeta del proyecto**
+
+6. **Devolvernos a la carpeta del proyecto**
    ```bash
    # Navegar a la carpeta raiz del proyecto
    cd ..
    ```
 
-3. **Iniciar Contenedores con Replicación**
+7. **Iniciar Contenedores con Replicación**
    ```bash
    # Construir e iniciar los contenedores
    docker-compose up --build
    ```
 
-4. **Verificar Estado de Replicación**
+8. **Verificar Estado de Replicación**
    ```bash
    # Conectarse al contenedor principal
    docker exec -it mysql-master mysql -u root -p
@@ -63,31 +69,31 @@ Clona el repositorio usando el siguiente enlace:
    SHOW SLAVE STATUS\G
    ```
 
-5. **Monitoreo de Replicación**
+9. **Monitoreo de Replicación**
    - Revisar los logs de los contenedores para asegurar que la replicación esté funcionando correctamente
    ```bash
    docker logs mysql-energia
    ```
 
-6. Ejecuta el siguiente comando para listar las bases de datos disponibles:
+10. Ejecuta el siguiente comando para listar las bases de datos disponibles:
 
    ```sql
    show databases;
    ```
 
-7. Para usar una base de datos específica, usa el siguiente comando:
+11. Para usar una base de datos específica, usa el siguiente comando:
 
    ```sql
    use energia;
    ```
 
-8. Si deseas listar las tablas dentro de la base de datos, usa:
+12. Si deseas listar las tablas dentro de la base de datos, usa:
 
    ```sql
    show tables;
    ```
 
-9. Realiza las consultas que requieras.
+13. Realiza las consultas que requieras.
 
 ### Notas Importantes
 - Asegúrate de que los puertos necesarios estén disponibles
