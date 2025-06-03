@@ -5,7 +5,7 @@ import time
 
 # Configuración de fechas
 FECHA_FIN = datetime.date(2024, 4, 30)
-FECHA_INICIO = FECHA_FIN - datetime.timedelta(days=0.01*365)
+FECHA_INICIO = FECHA_FIN - datetime.timedelta(days=3*365)
 
 # Endpoints correctos
 URL_HOURLY = 'https://servapibi.xm.com.co/hourly'
